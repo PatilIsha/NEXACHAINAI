@@ -20,7 +20,7 @@ Stack Developer Technical Assessment.
 
 | # | Deliverable | Where |
 |---|-------------|-------|
-| 1 | GitHub repository link | this repository |
+| 1 | GitHub repository link | https://github.com/PatilIsha/NEXACHAINAI |
 | 2 | Database schema files | [backend/src/models/](backend/src/models/) - User, Investment, LevelIncome, RoiHistory, JobRun |
 | 3 | API source code | [backend/src/routes/](backend/src/routes/), [controllers/](backend/src/controllers/), [validations/](backend/src/validations/), [middleware/](backend/src/middleware/), [app.js](backend/src/app.js) |
 | 4 | Business logic implementation | [backend/src/services/](backend/src/services/) - roi.service.js, levelIncome.service.js, investment.service.js, dashboard.service.js, referral.service.js |
