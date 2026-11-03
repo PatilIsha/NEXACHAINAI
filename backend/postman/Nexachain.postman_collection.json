@@ -1,0 +1,1557 @@
+{
+  "info": {
+    "name": "Nexachain Investment & Referral API",
+    "description": "REST API for the MERN investment & referral platform.\n\n1. Run **Auth > Login** (or Register) - the test script stores the JWT in the `token` collection variable.\n2. Every private request inherits `Bearer {{token}}`.\n3. Cron endpoints use the `x-cron-secret` header (`cronSecret` variable) instead of a user token.\n\nAll responses share the envelope `{ success, message, data, meta?, errors? }`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "cronSecret",
+      "value": "dev-cron-secret-123"
+    },
+    {
+      "key": "investmentId",
+      "value": "6ae9a7aae88fa63474cc5e45"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"status\": \"ok\",\n  \"uptime\": 158.17\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Creates a user. referralCode is optional; when present the user joins that sponsor network.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"new.user@example.com\",\n  \"mobile\": \"9876500000\",\n  \"password\": \"Password@123\",\n  \"referralCode\": \"NXAARAV\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description": "Creates a user. referralCode is optional; when present the user joins that sponsor network.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"new.user@example.com\",\n  \"mobile\": \"9876500000\",\n  \"password\": \"Password@123\",\n  \"referralCode\": \"NXAARAV\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Registration successful\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"6ae9b0c1f2a3b4c5d6e7f801\",\n      \"fullName\": \"New User\",\n      \"email\": \"new.user@example.com\",\n      \"mobile\": \"9876500000\",\n      \"referralCode\": \"NXK7P2QA\",\n      \"referredBy\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"walletBalance\": 0,\n      \"totalInvested\": 0,\n      \"totalRoiEarned\": 0,\n      \"totalLevelIncomeEarned\": 0,\n      \"status\": \"active\",\n      \"createdAt\": \"2026-11-03T09:17:36.183Z\",\n      \"updatedAt\": \"2026-11-03T09:17:37.698Z\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YWU5YTZiMGQ1M2EwM2Y5OGEyMGRiYjkiLCJpYXQiOjE3OTM3MDM4OTYsImV4cCI6MTc5NDMwODY5NiwiaXNzIjoibmV4YWNoYWluLWFwaSJ9.signature\"\n  }\n}"
+            },
+            {
+              "name": "409 Conflict",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description": "Creates a user. referralCode is optional; when present the user joins that sponsor network.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"new.user@example.com\",\n  \"mobile\": \"9876500000\",\n  \"password\": \"Password@123\",\n  \"referralCode\": \"NXAARAV\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Email is already registered\"\n}"
+            },
+            {
+              "name": "422 Validation failed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description": "Creates a user. referralCode is optional; when present the user joins that sponsor network.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"New User\",\n  \"email\": \"new.user@example.com\",\n  \"mobile\": \"9876500000\",\n  \"password\": \"Password@123\",\n  \"referralCode\": \"NXAARAV\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    {\n      \"field\": \"fullName\",\n      \"message\": \"fullName is required\"\n    },\n    {\n      \"field\": \"email\",\n      \"message\": \"email must be a valid email\"\n    },\n    {\n      \"field\": \"mobile\",\n      \"message\": \"mobile is required\"\n    },\n    {\n      \"field\": \"password\",\n      \"message\": \"password length must be at least 8 characters long\"\n    }\n  ]\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.token) {",
+                  "  pm.collectionVariables.set('token', json.data.token);",
+                  "  console.log('token saved to collection variable');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email or mobile + password. Returns a JWT (default expiry 7d).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"aarav@example.com\",\n  \"password\": \"Password@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login with email or mobile + password. Returns a JWT (default expiry 7d).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"aarav@example.com\",\n  \"password\": \"Password@123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"user\": {\n      \"_id\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"fullName\": \"Aarav Sharma\",\n      \"email\": \"aarav@example.com\",\n      \"mobile\": \"9876543210\",\n      \"referralCode\": \"NXAARAV\",\n      \"referredBy\": null,\n      \"walletBalance\": 2413,\n      \"totalInvested\": 10400,\n      \"totalRoiEarned\": 1800,\n      \"totalLevelIncomeEarned\": 613,\n      \"status\": \"active\",\n      \"createdAt\": \"2026-11-03T09:17:36.183Z\",\n      \"updatedAt\": \"2026-11-03T09:17:37.698Z\"\n    },\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YWU5YTZiMGQ1M2EwM2Y5OGEyMGRiYjkiLCJpYXQiOjE3OTM3MDM4OTYsImV4cCI6MTc5NDMwODY5NiwiaXNzIjoibmV4YWNoYWluLWFwaSJ9.signature\"\n  }\n}"
+            },
+            {
+              "name": "401 Invalid credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login with email or mobile + password. Returns a JWT (default expiry 7d).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"aarav@example.com\",\n  \"password\": \"Password@123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid credentials\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.success && json.data && json.data.token) {",
+                  "  pm.collectionVariables.set('token', json.data.token);",
+                  "  console.log('token saved to collection variable');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Current user (me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Profile of the authenticated user (JWT required)."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                },
+                "description": "Profile of the authenticated user (JWT required)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"_id\": \"6ae9a6b0d53a03f98a20dbb9\",\n    \"fullName\": \"Aarav Sharma\",\n    \"email\": \"aarav@example.com\",\n    \"mobile\": \"9876543210\",\n    \"referralCode\": \"NXAARAV\",\n    \"referredBy\": null,\n    \"walletBalance\": 2413,\n    \"totalInvested\": 10400,\n    \"totalRoiEarned\": 1800,\n    \"totalLevelIncomeEarned\": 613,\n    \"status\": \"active\",\n    \"createdAt\": \"2026-11-03T09:17:36.183Z\",\n    \"updatedAt\": \"2026-11-03T09:17:37.698Z\"\n  }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                },
+                "description": "Profile of the authenticated user (JWT required)."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication required: missing Bearer token\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Investments",
+      "item": [
+        {
+          "name": "List plans",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/investments/plans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "investments",
+                "plans"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments/plans",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments",
+                    "plans"
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"code\": \"STARTER\",\n      \"name\": \"Starter\",\n      \"minAmount\": 100,\n      \"maxAmount\": 999,\n      \"dailyRoiPercent\": 1,\n      \"durationDays\": 30\n    },\n    {\n      \"code\": \"GROWTH\",\n      \"name\": \"Growth\",\n      \"minAmount\": 1000,\n      \"maxAmount\": 4999,\n      \"dailyRoiPercent\": 1.5,\n      \"durationDays\": 60\n    },\n    {\n      \"code\": \"PREMIUM\",\n      \"name\": \"Premium\",\n      \"minAmount\": 5000,\n      \"maxAmount\": 100000,\n      \"dailyRoiPercent\": 2,\n      \"durationDays\": 90\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create investment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/investments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "investments"
+              ]
+            },
+            "description": "Creates an Active investment and distributes level income to the upline in the same transaction.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planCode\": \"GROWTH\",\n  \"amount\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments"
+                  ]
+                },
+                "description": "Creates an Active investment and distributes level income to the upline in the same transaction.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"planCode\": \"GROWTH\",\n  \"amount\": 1000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Investment created\",\n  \"data\": {\n    \"investment\": {\n      \"_id\": \"6ae9a7aae88fa63474cc5e45\",\n      \"user\": \"6ae9a6b1d53a03f98a20dbc1\",\n      \"amount\": 1000,\n      \"plan\": {\n        \"code\": \"GROWTH\",\n        \"name\": \"Growth\",\n        \"minAmount\": 1000,\n        \"maxAmount\": 4999,\n        \"dailyRoiPercent\": 1.5,\n        \"durationDays\": 60\n      },\n      \"dailyRoiPercent\": 1.5,\n      \"durationDays\": 60,\n      \"startDate\": \"2026-11-03T09:21:46.284Z\",\n      \"endDate\": \"2027-01-02T09:21:46.284Z\",\n      \"status\": \"Active\",\n      \"totalRoiPaid\": 0,\n      \"roiDaysPaid\": 0,\n      \"levelIncomeDistributed\": true,\n      \"createdAt\": \"2026-11-03T09:21:46.298Z\",\n      \"updatedAt\": \"2026-11-03T09:21:46.298Z\",\n      \"dailyRoiAmount\": 15,\n      \"progressPercent\": 0\n    },\n    \"levelIncomeDistributed\": [\n      {\n        \"user\": \"6ae9a6b0d53a03f98a20dbc0\",\n        \"level\": 1,\n        \"amount\": 100\n      },\n      {\n        \"user\": \"6ae9a6b0d53a03f98a20dbbf\",\n        \"level\": 2,\n        \"amount\": 50\n      },\n      {\n        \"user\": \"6ae9a6b0d53a03f98a20dbbe\",\n        \"level\": 3,\n        \"amount\": 30\n      },\n      {\n        \"user\": \"6ae9a6b0d53a03f98a20dbbc\",\n        \"level\": 4,\n        \"amount\": 20\n      },\n      {\n        \"user\": \"6ae9a6b0d53a03f98a20dbba\",\n        \"level\": 5,\n        \"amount\": 10\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "400 Amount out of range",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments"
+                  ]
+                },
+                "description": "Creates an Active investment and distributes level income to the upline in the same transaction.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"planCode\": \"GROWTH\",\n  \"amount\": 1000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Amount for Growth plan must be between 1000 and 4999\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "My investments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/investments?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "investments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "Active",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Paginated list (newest first). Optional status filter: Active | Completed | Cancelled."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "status",
+                      "value": "Active",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Paginated list (newest first). Optional status filter: Active | Completed | Cancelled."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"_id\": \"6ae9a7aae88fa63474cc5e45\",\n      \"user\": \"6ae9a6b1d53a03f98a20dbc1\",\n      \"amount\": 1000,\n      \"plan\": {\n        \"code\": \"GROWTH\",\n        \"name\": \"Growth\",\n        \"minAmount\": 1000,\n        \"maxAmount\": 4999,\n        \"dailyRoiPercent\": 1.5,\n        \"durationDays\": 60\n      },\n      \"dailyRoiPercent\": 1.5,\n      \"durationDays\": 60,\n      \"startDate\": \"2026-11-03T09:21:46.284Z\",\n      \"endDate\": \"2027-01-02T09:21:46.284Z\",\n      \"status\": \"Active\",\n      \"totalRoiPaid\": 0,\n      \"roiDaysPaid\": 0,\n      \"levelIncomeDistributed\": true,\n      \"createdAt\": \"2026-11-03T09:21:46.298Z\",\n      \"updatedAt\": \"2026-11-03T09:21:46.298Z\",\n      \"dailyRoiAmount\": 15,\n      \"progressPercent\": 0\n    },\n    {\n      \"_id\": \"6ae9a6b1d53a03f98a20dbc3\",\n      \"user\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"amount\": 10000,\n      \"plan\": {\n        \"code\": \"PREMIUM\",\n        \"name\": \"Premium\",\n        \"minAmount\": 5000,\n        \"maxAmount\": 100000,\n        \"dailyRoiPercent\": 2,\n        \"durationDays\": 90\n      },\n      \"dailyRoiPercent\": 2,\n      \"durationDays\": 90,\n      \"startDate\": \"2026-10-25T09:17:37.232Z\",\n      \"endDate\": \"2027-01-23T09:17:37.232Z\",\n      \"status\": \"Active\",\n      \"totalRoiPaid\": 1800,\n      \"roiDaysPaid\": 9,\n      \"levelIncomeDistributed\": true,\n      \"createdAt\": \"2026-11-03T09:21:46.298Z\",\n      \"updatedAt\": \"2026-11-03T09:21:46.298Z\",\n      \"dailyRoiAmount\": 200,\n      \"progressPercent\": 10,\n      \"lastRoiDate\": \"2026-11-03T00:00:00.000Z\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 2,\n    \"totalPages\": 1\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Investment by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/investments/{{investmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "investments",
+                "{{investmentId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments/{{investmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments",
+                    "{{investmentId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"_id\": \"6ae9a7aae88fa63474cc5e45\",\n    \"user\": \"6ae9a6b1d53a03f98a20dbc1\",\n    \"amount\": 1000,\n    \"plan\": {\n      \"code\": \"GROWTH\",\n      \"name\": \"Growth\",\n      \"minAmount\": 1000,\n      \"maxAmount\": 4999,\n      \"dailyRoiPercent\": 1.5,\n      \"durationDays\": 60\n    },\n    \"dailyRoiPercent\": 1.5,\n    \"durationDays\": 60,\n    \"startDate\": \"2026-11-03T09:21:46.284Z\",\n    \"endDate\": \"2027-01-02T09:21:46.284Z\",\n    \"status\": \"Active\",\n    \"totalRoiPaid\": 0,\n    \"roiDaysPaid\": 0,\n    \"levelIncomeDistributed\": true,\n    \"createdAt\": \"2026-11-03T09:21:46.298Z\",\n    \"updatedAt\": \"2026-11-03T09:21:46.298Z\",\n    \"dailyRoiAmount\": 15,\n    \"progressPercent\": 0\n  }\n}"
+            },
+            {
+              "name": "404 Not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/investments/{{investmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "investments",
+                    "{{investmentId}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Investment not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard"
+              ]
+            },
+            "description": "Headline cards, investment status summary, referral count, income breakdown and a 30-day earnings series."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/dashboard",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "dashboard"
+                  ]
+                },
+                "description": "Headline cards, investment status summary, referral count, income breakdown and a 30-day earnings series."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"fullName\": \"Aarav Sharma\",\n      \"email\": \"aarav@example.com\",\n      \"referralCode\": \"NXAARAV\"\n    },\n    \"cards\": {\n      \"totalInvestments\": {\n        \"count\": 2,\n        \"amount\": 10400\n      },\n      \"dailyRoi\": {\n        \"expected\": 204,\n        \"creditedToday\": 200,\n        \"date\": \"2026-11-03\"\n      },\n      \"totalRoiEarned\": 1800,\n      \"totalLevelIncome\": 613,\n      \"walletBalance\": 2413\n    },\n    \"investments\": {\n      \"active\": {\n        \"count\": 2,\n        \"amount\": 10400\n      },\n      \"completed\": {\n        \"count\": 0,\n        \"amount\": 0\n      },\n      \"cancelled\": {\n        \"count\": 0,\n        \"amount\": 0\n      }\n    },\n    \"referrals\": {\n      \"direct\": 2\n    },\n    \"incomeBreakdown\": [\n      {\n        \"key\": \"roi\",\n        \"label\": \"Daily ROI\",\n        \"value\": 1800\n      },\n      {\n        \"key\": \"levelIncome\",\n        \"label\": \"Level income\",\n        \"value\": 613\n      }\n    ],\n    \"earningsSeries\": [\n      {\n        \"date\": \"2026-10-05\",\n        \"roi\": 0,\n        \"levelIncome\": 0,\n        \"total\": 0\n      },\n      {\n        \"date\": \"2026-11-01\",\n        \"roi\": 200,\n        \"levelIncome\": 12,\n        \"total\": 212\n      },\n      {\n        \"date\": \"2026-11-02\",\n        \"roi\": 200,\n        \"levelIncome\": 0,\n        \"total\": 200\n      },\n      {\n        \"date\": \"2026-11-03\",\n        \"roi\": 200,\n        \"levelIncome\": 0,\n        \"total\": 200\n      }\n    ]\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ROI",
+      "item": [
+        {
+          "name": "ROI history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/roi/history?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "roi",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/roi/history?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "roi",
+                    "history"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"_id\": \"6ae9a6b1d53a03f98a20dc13\",\n      \"user\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"investment\": {\n        \"_id\": \"6ae9a6b1d53a03f98a20dbc3\",\n        \"amount\": 10000,\n        \"plan\": {\n          \"name\": \"Premium\"\n        },\n        \"dailyRoiPercent\": 2\n      },\n      \"amount\": 200,\n      \"roiDate\": \"2026-11-03T00:00:00.000Z\",\n      \"status\": \"credited\",\n      \"date\": \"2026-11-03T09:17:37.681Z\",\n      \"createdAt\": \"2026-11-03T09:17:37.655Z\",\n      \"updatedAt\": \"2026-11-03T09:17:37.682Z\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 9,\n    \"totalPages\": 1\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Referrals",
+      "item": [
+        {
+          "name": "Direct referrals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/referrals/direct?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "referrals",
+                "direct"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/referrals/direct?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "referrals",
+                    "direct"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"status\": \"active\",\n      \"_id\": \"6ae9a6b0d53a03f98a20dbbb\",\n      \"fullName\": \"Rohan Mehta\",\n      \"email\": \"rohan@example.com\",\n      \"mobile\": \"9876543212\",\n      \"referralCode\": \"NXROHAN\",\n      \"totalInvested\": 500,\n      \"createdAt\": \"2026-11-03T09:17:36.385Z\"\n    },\n    {\n      \"status\": \"active\",\n      \"_id\": \"6ae9a6b0d53a03f98a20dbba\",\n      \"fullName\": \"Priya Verma\",\n      \"email\": \"priya@example.com\",\n      \"mobile\": \"9876543211\",\n      \"referralCode\": \"NXPRIYA\",\n      \"totalInvested\": 2500,\n      \"createdAt\": \"2026-11-03T09:17:36.285Z\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 2,\n    \"totalPages\": 1\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Referral tree",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/referrals/tree?depth=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "referrals",
+                "tree"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Complete downline as a nested tree (one $graphLookup query). depth 1-10, default 5."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/referrals/tree?depth=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "referrals",
+                    "tree"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    }
+                  ]
+                },
+                "description": "Complete downline as a nested tree (one $graphLookup query). depth 1-10, default 5."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"tree\": {\n      \"status\": \"active\",\n      \"_id\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"fullName\": \"Aarav Sharma\",\n      \"email\": \"aarav@example.com\",\n      \"referralCode\": \"NXAARAV\",\n      \"totalInvested\": 10400,\n      \"createdAt\": \"2026-11-03T09:17:36.183Z\",\n      \"level\": 0,\n      \"children\": [\n        {\n          \"status\": \"active\",\n          \"_id\": \"6ae9a6b0d53a03f98a20dbba\",\n          \"fullName\": \"Priya Verma\",\n          \"email\": \"priya@example.com\",\n          \"referralCode\": \"NXPRIYA\",\n          \"referredBy\": \"6ae9a6b0d53a03f98a20dbb9\",\n          \"totalInvested\": 2500,\n          \"createdAt\": \"2026-11-03T09:17:36.285Z\",\n          \"depth\": 0,\n          \"level\": 1,\n          \"children\": [\n            {\n              \"status\": \"active\",\n              \"_id\": \"6ae9a6b0d53a03f98a20dbbc\",\n              \"fullName\": \"Neha Singh\",\n              \"email\": \"neha@example.com\",\n              \"referralCode\": \"NXNEHA\",\n              \"referredBy\": \"6ae9a6b0d53a03f98a20dbba\",\n              \"totalInvested\": 1500,\n              \"createdAt\": \"2026-11-03T09:17:36.486Z\",\n              \"depth\": 1,\n              \"level\": 2,\n              \"children\": []\n            }\n          ]\n        },\n        {\n          \"status\": \"active\",\n          \"_id\": \"6ae9a6b0d53a03f98a20dbbb\",\n          \"fullName\": \"Rohan Mehta\",\n          \"email\": \"rohan@example.com\",\n          \"referralCode\": \"NXROHAN\",\n          \"referredBy\": \"6ae9a6b0d53a03f98a20dbb9\",\n          \"totalInvested\": 500,\n          \"createdAt\": \"2026-11-03T09:17:36.385Z\",\n          \"depth\": 0,\n          \"level\": 1,\n          \"children\": []\n        }\n      ]\n    },\n    \"totalMembers\": 3,\n    \"levelCounts\": {\n      \"1\": 2,\n      \"2\": 1\n    },\n    \"maxDepth\": 2\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Level income history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/referrals/income?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "referrals",
+                "income"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/referrals/income?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "referrals",
+                    "income"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"_id\": \"6ae9a6b1d53a03f98a20dbdc\",\n      \"user\": \"6ae9a6b0d53a03f98a20dbb9\",\n      \"fromUser\": {\n        \"_id\": \"6ae9a6b0d53a03f98a20dbc0\",\n        \"fullName\": \"Arjun Nair\",\n        \"referralCode\": \"NXARJUN\"\n      },\n      \"investment\": {\n        \"_id\": \"6ae9a6b1d53a03f98a20dbd7\",\n        \"amount\": 1200,\n        \"plan\": {\n          \"name\": \"Growth\"\n        }\n      },\n      \"level\": 5,\n      \"percentage\": 1,\n      \"amount\": 12,\n      \"date\": \"2026-11-01T09:17:37.353Z\",\n      \"status\": \"credited\",\n      \"createdAt\": \"2026-11-03T09:17:37.348Z\",\n      \"updatedAt\": \"2026-11-03T09:17:37.354Z\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"limit\": 10,\n    \"total\": 7,\n    \"totalPages\": 1\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cron (admin)",
+      "item": [
+        {
+          "name": "Run daily ROI job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-cron-secret",
+                "value": "{{cronSecret}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cron/roi/run",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cron",
+                "roi",
+                "run"
+              ]
+            },
+            "description": "Manually triggers the idempotent daily ROI job. date (YYYY-MM-DD) is optional and defaults to today; use it to back-fill a missed day. Running it twice for the same day is safe: the second call is skipped.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-11-03\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 Completed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-cron-secret",
+                    "value": "{{cronSecret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cron/roi/run",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cron",
+                    "roi",
+                    "run"
+                  ]
+                },
+                "description": "Manually triggers the idempotent daily ROI job. date (YYYY-MM-DD) is optional and defaults to today; use it to back-fill a missed day. Running it twice for the same day is safe: the second call is skipped.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date\": \"2026-11-03\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"ROI job for 2026-11-04 completed\",\n  \"data\": {\n    \"runKey\": \"2026-11-04\",\n    \"skipped\": false,\n    \"stats\": {\n      \"scanned\": 11,\n      \"credited\": 10,\n      \"completed\": 0,\n      \"duplicates\": 0,\n      \"skipped\": 1,\n      \"failed\": 0,\n      \"totalAmount\": 435.5\n    },\n    \"durationMs\": 61,\n    \"transactional\": true\n  }\n}"
+            },
+            {
+              "name": "200 Skipped (already completed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-cron-secret",
+                    "value": "{{cronSecret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cron/roi/run",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cron",
+                    "roi",
+                    "run"
+                  ]
+                },
+                "description": "Manually triggers the idempotent daily ROI job. date (YYYY-MM-DD) is optional and defaults to today; use it to back-fill a missed day. Running it twice for the same day is safe: the second call is skipped.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date\": \"2026-11-03\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"ROI job for 2026-11-03 skipped (already-completed)\",\n  \"data\": {\n    \"runKey\": \"2026-11-03\",\n    \"skipped\": true,\n    \"reason\": \"already-completed\",\n    \"run\": {\n      \"_id\": \"6ae9a6b1d53a03f98a20dc12\",\n      \"jobName\": \"daily-roi\",\n      \"runKey\": \"2026-11-03\",\n      \"status\": \"completed\",\n      \"trigger\": \"script\",\n      \"startedAt\": \"2026-11-03T09:17:37.640Z\",\n      \"finishedAt\": \"2026-11-03T09:17:37.698Z\",\n      \"durationMs\": 55,\n      \"attempts\": 1,\n      \"stats\": {\n        \"scanned\": 10,\n        \"credited\": 9,\n        \"completed\": 0,\n        \"duplicates\": 0,\n        \"skipped\": 1,\n        \"failed\": 0,\n        \"totalAmount\": 416.5\n      }\n    }\n  }\n}"
+            },
+            {
+              "name": "401 Invalid secret",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-cron-secret",
+                    "value": "{{cronSecret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cron/roi/run",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cron",
+                    "roi",
+                    "run"
+                  ]
+                },
+                "description": "Manually triggers the idempotent daily ROI job. date (YYYY-MM-DD) is optional and defaults to today; use it to back-fill a missed day. Running it twice for the same day is safe: the second call is skipped.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"date\": \"2026-11-03\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid cron secret\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Recent job runs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-cron-secret",
+                "value": "{{cronSecret}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cron/roi/runs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cron",
+                "roi",
+                "runs"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "x-cron-secret",
+                    "value": "{{cronSecret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cron/roi/runs",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cron",
+                    "roi",
+                    "runs"
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": [\n    {\n      \"_id\": \"6ae9a6b1d53a03f98a20dc12\",\n      \"jobName\": \"daily-roi\",\n      \"runKey\": \"2026-11-03\",\n      \"status\": \"completed\",\n      \"trigger\": \"cron\",\n      \"startedAt\": \"2026-11-03T18:30:00.012Z\",\n      \"finishedAt\": \"2026-11-03T18:30:00.070Z\",\n      \"durationMs\": 58,\n      \"attempts\": 1,\n      \"stats\": {\n        \"scanned\": 10,\n        \"credited\": 9,\n        \"completed\": 0,\n        \"duplicates\": 0,\n        \"skipped\": 1,\n        \"failed\": 0,\n        \"totalAmount\": 416.5\n      }\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
